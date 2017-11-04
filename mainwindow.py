@@ -74,14 +74,12 @@ class MenuBar(object):
 
 
     #CALLBACKS------------------
-
     def show_help(self):
         """Display message on how to use."""
         msg = ("NBA Stat Tracker can be used to search for player information.")
         QMessageBox.about(self.parent,
                           "About",
                           msg)
-
 
 
 class StatusBar(object):
@@ -100,6 +98,8 @@ class StatusBar(object):
         self.statusbar.setFont(font)
         self.statusbar.setStyleSheet("background-color:rgb(192, 192, 192)")
         parent.setStatusBar(self.statusbar)
+
+
 
 
 class CipExplorer(QMainWindow, object):
