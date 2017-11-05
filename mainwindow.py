@@ -138,70 +138,63 @@ class PresentData(QTableWidget, object):
         self.wordWrap()
         self.setRowCount(10)
         self.setColumnCount(10)
-
         self.setCornerButtonEnabled(True)
 
-        horizontal_header = self.horizontalHeader()
-        horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+        self.horizontal_header = self.horizontalHeader()
+        self.horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
 
-        vertical_header = self.verticalHeader()
-        vertical_header.setSectionResizeMode(QHeaderView.Stretch)
+        self.vertical_header = self.verticalHeader()
+        self.vertical_header.setSectionResizeMode(QHeaderView.Stretch)
 
         # Signals
-        horizontal_header.sectionDoubleClicked.connect(self.set_horizontal_headers)
+        self.horizontal_header.sectionDoubleClicked.connect(self.set_horizontal_headers)
+        self.vertical_header.sectionDoubleClicked.connect(self.set_vertical_headers)
 
-    def set_horizontal_headers(self):
+
+    def set_horizontal_headers(self, i):
         """Set the horizontal headers, user requested.
 
         :param list headers:
             List of categories user wishes to see.
 
         """
-        print('double clicked')
+        i = (self.currentColumn())
+        dialog = InputDialog()
+        line_edit = LineEditer()
+        text = dialog.getText(self,
+                              'Change category.',
+                              'Test',
+                              line_edit.Normal)
 
-    def set_vertical_headers(self, headers):
+    def set_vertical_headers(self, i):
         """Set the vertical headers, user requested.
 
         :param list headers:
             List of players user wishes to see.
 
         """
-        self.setVerticalHeaderLabels(headers)
+        # self.setVerticalHeaderLabels(headers)
+
+class LineEditer(QLineEdit, object):
 
 
-class EditableTabBar(QObject):
-    def __init__(self, parent):
-        QObject.__init__(self, parent)
-        self._editor = QLineEdit(self)
-        self._editor.setWindowFlags(Qt.Popup)
-        self._editor.setFocusProxy(self)
-        self._editor.editingFinished.connect(self.handleEditingFinished)
-        self._editor.installEventFilter(self)
+    """Line edit to support auto-complete and other
+    various methods needed for categories.
 
-    def eventFilter(self, widget, event):
-        if ((event.type() == QEvent.MouseButtonPress and not self._editor.geometry().contains(event.globalPos())) or (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Escape)):
-            self._editor.hide()
-            return True
-        return QObject.eventFilter(self, widget, event)
+    """
 
-    def mouseDoubleClickEvent(self, event):
-        index = self.tabAt(event.pos())
-        if index >= 0:
-            self.editTab(index)
+    def __init__(self, parent=None):
+        super(LineEditer, self).__init__(parent)
 
-    def editTab(self, index):
-        rect = self.tabRect(index)
-        self._editor.setFixedSize(rect.size())
-        self._editor.move(self.parent().mapToGlobal(rect.topLeft()))
-        self._editor.setText(self.tabText(index))
-        if not self._editor.isVisible():
-            self._editor.show()
 
-    def handleEditingFinished(self):
-        index = self.currentIndex()
-        if index >= 0:
-            self._editor.hide()
-            self.setTabText(index, self._editor.text())
+class InputDialog(QInputDialog, object):
+    """Input dialog to support auto-complete and other
+    various methods needed for categories.
+
+    """
+
+    def __init__(self, parent=None):
+        super(InputDialog, self).__init__(parent)
 
 
 
