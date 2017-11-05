@@ -26,12 +26,34 @@ class MainWindow(QWidget, object):
         self.statusbar = StatusBar(parent)
 
         # Declare layouts
-        layout = QVBoxLayout(self)
+        layout = QHBoxLayout()
+        middle_table = QVBoxLayout()
+
+        # Center Table Widget and Buttons
+        self.table_widget = PresentData(self.parent)
+
+        go_live_button = QPushButton("Go Live!")
+        go_live_button.setToolTip("Allow for live stats to update.")
+        go_live_policy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Minimum)
+        go_live_button.setSizePolicy(go_live_policy)
+
+        middle_table.addWidget(go_live_button, alignment=Qt.AlignCenter)
+        middle_table.addSpacerItem(QSpacerItem(0, 25))
+        middle_table.addWidget(self.table_widget)
+
+        # Set layouts
+        layout.addLayout(middle_table)
+
+        # Set signals
+        go_live_button.clicked.connect(self.go_live_cb)
 
         self.setLayout(layout)
         self.setMinimumSize(950, 450)
 
     # CALLBACKS----------
+    def go_live_cb(self):
+        """Handle updating the table with live data."""
+
 
 class MenuBar(object):
 
@@ -48,6 +70,10 @@ class MenuBar(object):
         new_tab.setShortcut("Ctrl+T")
         file_mb.addAction(new_tab)
 
+        compare = QAction("Compare", parent)
+        compare.setShortcut("Ctrl+C")
+        file_mb.addAction(compare)
+
         settings = QAction("Options...", parent)
         file_mb.addAction(settings)
 
@@ -58,6 +84,7 @@ class MenuBar(object):
         quit_mb = QAction("Quit", parent)
         quit_mb.setShortcut("Ctrl+Q")
         file_mb.addAction(quit_mb)
+
 
         # HELP MENU
         help_mb = menubar.addMenu("Help")
@@ -87,18 +114,94 @@ class StatusBar(object):
     """Defines and controls all statusbar actions."""
 
     def __init__(self, parent):
-        self.statusbar = parent.statusBar()
+        statusbar = parent.statusBar()
         self.parent = parent     # parent is CipExplorer
-        self.statusbar.setSizeGripEnabled(True)
+        statusbar.setSizeGripEnabled(True)
         font = QFont()
         font.setFamily("")
         font.setPointSize(8)
         font.setBold(True)
         font.setWeight(55)
-        self.statusbar.setFont(font)
-        self.statusbar.setStyleSheet("background-color:rgb(192, 192, 192)")
-        parent.setStatusBar(self.statusbar)
+        statusbar.setFont(font)
+        statusbar.setStyleSheet("background-color:rgb(192, 192, 192)")
+        parent.setStatusBar(statusbar)
 
+
+class PresentData(QTableWidget, object):
+
+    """Give user a nice way to view the information requested."""
+
+    def __init__(self, parent):
+        super(PresentData, self).__init__(parent)
+        self.parent = parent
+
+        self.wordWrap()
+        self.setRowCount(10)
+        self.setColumnCount(10)
+
+        self.setCornerButtonEnabled(True)
+
+        horizontal_header = self.horizontalHeader()
+        horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+
+        vertical_header = self.verticalHeader()
+        vertical_header.setSectionResizeMode(QHeaderView.Stretch)
+
+        # Signals
+        horizontal_header.sectionDoubleClicked.connect(self.set_horizontal_headers)
+
+    def set_horizontal_headers(self):
+        """Set the horizontal headers, user requested.
+
+        :param list headers:
+            List of categories user wishes to see.
+
+        """
+        print('double clicked')
+
+    def set_vertical_headers(self, headers):
+        """Set the vertical headers, user requested.
+
+        :param list headers:
+            List of players user wishes to see.
+
+        """
+        self.setVerticalHeaderLabels(headers)
+
+
+class EditableTabBar(QObject):
+    def __init__(self, parent):
+        QObject.__init__(self, parent)
+        self._editor = QLineEdit(self)
+        self._editor.setWindowFlags(Qt.Popup)
+        self._editor.setFocusProxy(self)
+        self._editor.editingFinished.connect(self.handleEditingFinished)
+        self._editor.installEventFilter(self)
+
+    def eventFilter(self, widget, event):
+        if ((event.type() == QEvent.MouseButtonPress and not self._editor.geometry().contains(event.globalPos())) or (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Escape)):
+            self._editor.hide()
+            return True
+        return QObject.eventFilter(self, widget, event)
+
+    def mouseDoubleClickEvent(self, event):
+        index = self.tabAt(event.pos())
+        if index >= 0:
+            self.editTab(index)
+
+    def editTab(self, index):
+        rect = self.tabRect(index)
+        self._editor.setFixedSize(rect.size())
+        self._editor.move(self.parent().mapToGlobal(rect.topLeft()))
+        self._editor.setText(self.tabText(index))
+        if not self._editor.isVisible():
+            self._editor.show()
+
+    def handleEditingFinished(self):
+        index = self.currentIndex()
+        if index >= 0:
+            self._editor.hide()
+            self.setTabText(index, self._editor.text())
 
 
 
