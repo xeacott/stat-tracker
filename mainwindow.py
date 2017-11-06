@@ -7,6 +7,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+# Relative Imports
+from new_category import *
+
 
 class MainWindow(QWidget, object):
 
@@ -159,12 +162,12 @@ class PresentData(QTableWidget, object):
 
         """
         i = (self.currentColumn())
-        dialog = InputDialog()
-        line_edit = LineEditer()
-        text = dialog.getText(self,
-                              'Change category.',
-                              'Test',
-                              line_edit.Normal)
+        header = QTableWidgetItem()
+        accepted = TabDialog.get_settings(self.parent)
+        if accepted:
+            header.setText(self.parent.cached_settings.category)
+            self.setHorizontalHeaderItem(i, header)
+
 
     def set_vertical_headers(self, i):
         """Set the vertical headers, user requested.
@@ -174,27 +177,6 @@ class PresentData(QTableWidget, object):
 
         """
         # self.setVerticalHeaderLabels(headers)
-
-class LineEditer(QLineEdit, object):
-
-
-    """Line edit to support auto-complete and other
-    various methods needed for categories.
-
-    """
-
-    def __init__(self, parent=None):
-        super(LineEditer, self).__init__(parent)
-
-
-class InputDialog(QInputDialog, object):
-    """Input dialog to support auto-complete and other
-    various methods needed for categories.
-
-    """
-
-    def __init__(self, parent=None):
-        super(InputDialog, self).__init__(parent)
 
 
 
@@ -213,6 +195,9 @@ class CipExplorer(QMainWindow, object):
         favicon = QIcon()
         self.setWindowIcon(favicon)
         self.setWindowTitle("NBA Stat Tracker")
+
+        self.cached_settings = TabDialogSettings()
+        self.all_categories = GetList(self)
 
         self.main_window = MainWindow(self)
         self.setCentralWidget(self.main_window)
