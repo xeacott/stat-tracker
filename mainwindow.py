@@ -9,6 +9,8 @@ from PyQt5.QtWidgets import *
 
 # Relative Imports
 from new_category import *
+from menu_status_bars import *
+from restore import *
 
 
 class MainWindow(QWidget, object):
@@ -16,7 +18,7 @@ class MainWindow(QWidget, object):
     """Main window of Stat Tracker.
 
     MainWindow is parent to menubar and statusbar. Instantiates the main
-    objects to be used by CipExplorer. It is the main window of QApplication.
+    objects to be used by Tracker. It is the main window of QApplication.
 
     """
 
@@ -33,7 +35,7 @@ class MainWindow(QWidget, object):
         middle_table = QVBoxLayout()
 
         # Center Table Widget and Buttons
-        self.table_widget = PresentData(self.parent)
+        self.table_widget = DataTable(self.parent)
 
         go_live_button = QPushButton("Go Live!")
         go_live_button.setToolTip("Allow for live stats to update.")
@@ -56,86 +58,15 @@ class MainWindow(QWidget, object):
     # CALLBACKS----------
     def go_live_cb(self):
         """Handle updating the table with live data."""
+        print('Go live!')
 
 
-class MenuBar(object):
-
-    """Defines and controls all menubar actions."""
-
-    def __init__(self, parent):
-        menubar = parent.menuBar()
-        self.parent = parent
-
-        # FILE MENU
-        file_mb = menubar.addMenu("File")
-
-        new_tab = QAction("New Tab", parent)
-        new_tab.setShortcut("Ctrl+T")
-        file_mb.addAction(new_tab)
-
-        compare = QAction("Compare", parent)
-        compare.setShortcut("Ctrl+C")
-        file_mb.addAction(compare)
-
-        settings = QAction("Options...", parent)
-        file_mb.addAction(settings)
-
-        export = QAction("Export Console", parent)
-        export.setShortcut("Ctrl+E")
-        file_mb.addAction(export)
-
-        quit_mb = QAction("Quit", parent)
-        quit_mb.setShortcut("Ctrl+Q")
-        file_mb.addAction(quit_mb)
-
-
-        # HELP MENU
-        help_mb = menubar.addMenu("Help")
-
-        cip_object_help = QAction("Explorer Help", parent)
-        cip_object_help.setShortcut("Ctrl+H")
-        help_mb.addAction(cip_object_help)
-
-        help_mb.addSeparator()
-
-        about = QAction("About", parent)
-        help_mb.addAction(about)
-        about.triggered.connect(self.show_help)
-
-
-    #CALLBACKS------------------
-    def show_help(self):
-        """Display message on how to use."""
-        msg = ("NBA Stat Tracker can be used to search for player information.")
-        QMessageBox.about(self.parent,
-                          "About",
-                          msg)
-
-
-class StatusBar(object):
-
-    """Defines and controls all statusbar actions."""
-
-    def __init__(self, parent):
-        statusbar = parent.statusBar()
-        self.parent = parent     # parent is CipExplorer
-        statusbar.setSizeGripEnabled(True)
-        font = QFont()
-        font.setFamily("")
-        font.setPointSize(8)
-        font.setBold(True)
-        font.setWeight(55)
-        statusbar.setFont(font)
-        statusbar.setStyleSheet("background-color:rgb(192, 192, 192)")
-        parent.setStatusBar(statusbar)
-
-
-class PresentData(QTableWidget, object):
+class DataTable(QTableWidget, object):
 
     """Give user a nice way to view the information requested."""
 
     def __init__(self, parent):
-        super(PresentData, self).__init__(parent)
+        super(DataTable, self).__init__(parent)
         self.parent = parent
 
         self.wordWrap()
@@ -161,9 +92,9 @@ class PresentData(QTableWidget, object):
             List of categories user wishes to see.
 
         """
-        i = (self.currentColumn())
+        i = self.currentColumn()
         header = QTableWidgetItem()
-        accepted = TabDialog.get_settings(self.parent)
+        accepted = CategoryDialog.get_settings(self.parent)
         if accepted:
             header.setText(self.parent.cached_settings.category)
             self.setHorizontalHeaderItem(i, header)
@@ -176,11 +107,15 @@ class PresentData(QTableWidget, object):
             List of players user wishes to see.
 
         """
-        # self.setVerticalHeaderLabels(headers)
+        i = self.currentRow()
+        header = QTableWidgetItem()
+        accepted = PlayerDialog.get_settings(self.parent)
+        if accepted:
+            header.setText(self.parent.cached_settings.player)
+            self.setVerticalHeaderItem(i, header)
 
 
-
-class CipExplorer(QMainWindow, object):
+class Tracker(QMainWindow, object):
 
     """Display main window of CIP Object Explorer.
 
@@ -191,13 +126,14 @@ class CipExplorer(QMainWindow, object):
     """
 
     def __init__(self, parent=None):
-        super(CipExplorer, self).__init__(parent)
+        super(Tracker, self).__init__(parent)
         favicon = QIcon()
         self.setWindowIcon(favicon)
         self.setWindowTitle("NBA Stat Tracker")
 
         self.cached_settings = TabDialogSettings()
-        self.all_categories = GetList(self)
+        self.all_categories = Categories(self)
+        self.all_players = Players(self)
 
         self.main_window = MainWindow(self)
         self.setCentralWidget(self.main_window)
