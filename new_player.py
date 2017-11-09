@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import *
 """
 
 
-class CategoryDialogSettings(object):
+class PlayerDialogSettings(object):
 
     """Tab dialog creation settings main class.
 
@@ -24,21 +24,21 @@ class CategoryDialogSettings(object):
     """
 
     def __init__(self):
-        self._category = None
+        self._player = None
         self.success = False
 
     @property
-    def category(self):
+    def player(self):
         """Return attribute settings.
 
         :returns: attr boolean value.
         :rtype: bool
 
         """
-        return self._category
+        return self._player
 
-    @category.setter
-    def category(self, value):
+    @player.setter
+    def player(self, value):
         """
         Set attr value based on value.
 
@@ -46,25 +46,25 @@ class CategoryDialogSettings(object):
             Value to set if dump is set.
 
         """
-        self._category= value
+        self._player = value
 
 
-class CategoryDialog(QDialog, object):
+class PlayerDialog(QDialog, object):
 
     """Build explorer UI and settings."""
 
     def __init__(self, parent):
-        super(CategoryDialog, self).__init__(parent,
+        super(PlayerDialog, self).__init__(parent,
                                              flags=Qt.WindowTitleHint |
-                                           Qt.WindowSystemMenuHint)
+                                             Qt.WindowSystemMenuHint)
         self.parent = parent
 
         # Declare layouts
         layout = QVBoxLayout(self)
 
         # Custom tab as main view
-        self.category = CategoryEntry(parent)
-        layout.addWidget(self.category, alignment=Qt.AlignCenter)
+        self.player = PlayerEntry(parent)
+        layout.addWidget(self.player, alignment=Qt.AlignCenter)
 
         # OK and Cancel buttons
         self.buttons = QDialogButtonBox(
@@ -75,15 +75,15 @@ class CategoryDialog(QDialog, object):
         layout.addWidget(self.buttons)
 
         self.setMinimumSize(350, 250)
-        self.setWindowTitle("Set Category")
+        self.setWindowTitle("Set Player")
 
     #CALLBACKS-------------------
     def test_text_cb(self):
         approved = True
-        if not self.category.text() in self.parent.all_categories.list:
+        if not self.player.text() in self.parent.all_players.list:
             QMessageBox.about(self,
                               'Notice!',
-                              'Category not loaded, please try again.')
+                              'Player not loaded, please try again.')
             approved = False
         return approved
 
@@ -96,30 +96,30 @@ class CategoryDialog(QDialog, object):
             Parent is CIP explorer.
 
         """
-        dialog = CategoryDialog(parent)
+        dialog = PlayerDialog(parent)
         result = dialog.exec_()
         accepted = False
         if result == QDialog.Accepted:
             approved = dialog.test_text_cb()
             if approved:
-                parent.category_cache.category = dialog.category.text()
+                parent.player_cache.player = dialog.player.text()
                 accepted = True
         return accepted
 
 
-class CategoryEntry(QLineEdit, object):
+class PlayerEntry(QLineEdit, object):
 
 
-    """Line edit to support auto-complete and other various methods needed for categories."""
+    """Line edit to support auto-complete and other various methods needed for players."""
 
     def __init__(self, parent):
-        super(CategoryEntry, self).__init__(parent)
+        super(PlayerEntry, self).__init__(parent)
         self.parent = parent
 
         self.completer = QCompleter()
         self.setCompleter(self.completer)
 
-        self.t = self.parent.all_categories.list
+        self.t = self.parent.all_players.list
         my_completer = QCompleter(self.t, self)
         my_completer.setCaseSensitivity(1)
         self.setCompleter(my_completer)

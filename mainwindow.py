@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import *
 
 # Relative Imports
 from new_category import *
+from new_player import *
 from menu_status_bars import *
 from restore import *
 
@@ -96,7 +97,7 @@ class DataTable(QTableWidget, object):
         header = QTableWidgetItem()
         accepted = CategoryDialog.get_settings(self.parent)
         if accepted:
-            header.setText(self.parent.cached_settings.category)
+            header.setText(self.parent.category_cache.category)
             self.setHorizontalHeaderItem(i, header)
 
 
@@ -111,7 +112,7 @@ class DataTable(QTableWidget, object):
         header = QTableWidgetItem()
         accepted = PlayerDialog.get_settings(self.parent)
         if accepted:
-            header.setText(self.parent.cached_settings.player)
+            header.setText(self.parent.player_cache.player)
             self.setVerticalHeaderItem(i, header)
 
 
@@ -131,7 +132,8 @@ class Tracker(QMainWindow, object):
         self.setWindowIcon(favicon)
         self.setWindowTitle("NBA Stat Tracker")
 
-        self.cached_settings = TabDialogSettings()
+        self.category_cache = CategoryDialogSettings()
+        self.player_cache = PlayerDialogSettings()
         self.all_categories = Categories(self)
         self.all_players = Players(self)
 
