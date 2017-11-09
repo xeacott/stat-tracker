@@ -15,7 +15,7 @@ def main():
     """Drive application upon startup and setup environment."""
     # Launch NBA Stat Tracker main window
     app = QApplication(sys.argv)
-    mw = MAIN_WINDOW.CipExplorer()
+    mw = MAIN_WINDOW.Tracker()
     mw.show()
 
     # Closure to ensure information window opens after the
