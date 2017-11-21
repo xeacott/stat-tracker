@@ -14,8 +14,6 @@ from nba_py import constants, team, player
 
 """
 
-
-
 class Categories(object):
 
     """Spawns a worker and thread to get a list of categories for a user."""
@@ -23,26 +21,6 @@ class Categories(object):
     def __init__(self, parent):
         super(Categories, self).__init__()
         self.parent = parent
-
-        self.list = ['MIN',
-                     'FGM',
-                     'FGA',
-                     'FG_PCT',
-                     'FG3M',
-                     'FG3A',
-                     'FG3_PCT',
-                     'FTM',
-                     'FTA',
-                     'FT_PCT',
-                     'OREB',
-                     'DREB',
-                     'REB',
-                     'AST',
-                     'STL',
-                     'BLK',
-                     'TOV',
-                     'PF',
-                     'PTS']
 
 
 class Players(object):
@@ -54,27 +32,7 @@ class Players(object):
         self.parent = parent
 
         self.current_season = constants.CURRENT_SEASON
-        self.player_stats = {
-            'MIN': None,
-            'FGM': None,
-            'FGA': None,
-            'FG_PCT': None,
-            'FG3M': None,
-            'FG3A': None,
-            'FG3_PCT': None,
-            'FTM': None,
-            'FTA': None,
-            'FT_PCT': None,
-            'OREB': None,
-            'DREB': None,
-            'REB': None,
-            'AST': None,
-            'STL': None,
-            'BLK': None,
-            'TOV': None,
-            'PF': None,
-            'PTS': None
-        }
+
         self.team_ids = []
         self.player_list = []
         self.player_id = []
@@ -123,6 +81,3 @@ class Players(object):
             player_stat_dict[player_stat_name] = player_stat_data
             full_list_of_data.append(player_stat_dict)
         return player_stat_dict
-
-
-
