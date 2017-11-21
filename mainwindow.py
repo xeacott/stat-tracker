@@ -104,7 +104,6 @@ class DataTable(QTableWidget, object):
             self.setHorizontalHeaderItem(i, header)
             self.completed.emit('category')
 
-
     def set_vertical_headers(self, i):
         """Set the vertical headers, user requested.
 
@@ -135,26 +134,29 @@ class DataTable(QTableWidget, object):
         """
         stat = None
         player_id = None
-        category = None
+        category = []
 
         count = self.columnCount()
         for i in range(count):
             try:
-                category = self.horizontalHeaderItem(i).text()
+                name = self.horizontalHeaderItem(i).text()
             except AttributeError:
                 print('The header was empty, so dont display anything.')
-
+                name = None
             try:
                 player_id = self.verticalHeaderItem(i).text()
             except AttributeError:
                 print('The header was empty, so dont display anything.')
+            category.append(name)
 
-            if text == 'player':
-                player_id = self.parent.all_players.player_and_id_dict[player_id]
-                self.parent.all_players.get_player_stat(player_id)
-
-
-
+        if text == 'player':
+            player_id = self.parent.all_players.player_and_id_dict[player_id]
+            player_stats = self.parent.all_players.get_player_stats(player_id)
+            for item in category:
+                if item in player_stats:
+                    print(player_stats[item])
+                    # data is (player_stats[item]) so put it in the right row
+            # find the column where item came from
 
 
 class Tracker(QMainWindow, object):

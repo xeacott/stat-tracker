@@ -109,9 +109,20 @@ class Players(object):
 
 
     def get_player_stats(self, player_id):
+        player_stat_dict = {}
+        full_list_of_data = []
+        player_stat_name = None
+        player_stat_data = None
         stats = player.PlayerCareer(player_id)
         for i in self.stat_category:
             try:
-                self.player_totals = stats.json['resultSets'][1]['rowSet'][0][i]
+                player_stat_name = stats.json['resultSets'][1]['headers'][i]
+                player_stat_data = stats.json['resultSets'][1]['rowSet'][0][i]
             except IndexError:
                 print(i)
+            player_stat_dict[player_stat_name] = player_stat_data
+            full_list_of_data.append(player_stat_dict)
+        return player_stat_dict
+
+
+
