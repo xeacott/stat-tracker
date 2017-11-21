@@ -56,7 +56,7 @@ class CategoryDialog(QDialog, object):
     def __init__(self, parent):
         super(CategoryDialog, self).__init__(parent,
                                              flags=Qt.WindowTitleHint |
-                                           Qt.WindowSystemMenuHint)
+                                             Qt.WindowSystemMenuHint)
         self.parent = parent
 
         # Declare layouts

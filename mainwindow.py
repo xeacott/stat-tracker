@@ -66,6 +66,8 @@ class DataTable(QTableWidget, object):
 
     """Give user a nice way to view the information requested."""
 
+    completed = pyqtSignal(str)
+
     def __init__(self, parent):
         super(DataTable, self).__init__(parent)
         self.parent = parent
@@ -84,6 +86,7 @@ class DataTable(QTableWidget, object):
         # Signals
         self.horizontal_header.sectionDoubleClicked.connect(self.set_horizontal_headers)
         self.vertical_header.sectionDoubleClicked.connect(self.set_vertical_headers)
+        self.completed[str].connect(self.display_data)
 
 
     def set_horizontal_headers(self, i):
@@ -99,6 +102,7 @@ class DataTable(QTableWidget, object):
         if accepted:
             header.setText(self.parent.category_cache.category)
             self.setHorizontalHeaderItem(i, header)
+            self.completed.emit('category')
 
 
     def set_vertical_headers(self, i):
@@ -114,6 +118,43 @@ class DataTable(QTableWidget, object):
         if accepted:
             header.setText(self.parent.player_cache.player)
             self.setVerticalHeaderItem(i, header)
+            self.completed.emit('player')
+
+    def display_data(self, text):
+        """Update cell according to user input.
+
+        Handles updating all data for each player and category requested.
+        If the sender is a category, scan the list of currently active players, and
+        for each of the categories specified, then list that data. If the sender is
+        a player, scan the list of currently active categories and apply them to the
+        player.
+
+        :param str text:
+            Position of header that changed, vertical or horizontal.
+
+        """
+        stat = None
+        player_id = None
+        category = None
+
+        count = self.columnCount()
+        for i in range(count):
+            try:
+                category = self.horizontalHeaderItem(i).text()
+            except AttributeError:
+                print('The header was empty, so dont display anything.')
+
+            try:
+                player_id = self.verticalHeaderItem(i).text()
+            except AttributeError:
+                print('The header was empty, so dont display anything.')
+
+            if text == 'player':
+                player_id = self.parent.all_players.player_and_id_dict[player_id]
+                self.parent.all_players.get_player_stat(player_id)
+
+
+
 
 
 class Tracker(QMainWindow, object):

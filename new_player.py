@@ -80,7 +80,7 @@ class PlayerDialog(QDialog, object):
     #CALLBACKS-------------------
     def test_text_cb(self):
         approved = True
-        if not self.player.text() in self.parent.all_players.list:
+        if not self.player.text() in self.parent.all_players.player_list:
             QMessageBox.about(self,
                               'Notice!',
                               'Player not loaded, please try again.')
@@ -119,7 +119,6 @@ class PlayerEntry(QLineEdit, object):
         self.completer = QCompleter()
         self.setCompleter(self.completer)
 
-        self.t = self.parent.all_players.list
-        my_completer = QCompleter(self.t, self)
+        my_completer = QCompleter(self.parent.all_players.player_list, self)
         my_completer.setCaseSensitivity(1)
         self.setCompleter(my_completer)
