@@ -22,6 +22,26 @@ class Categories(object):
         super(Categories, self).__init__()
         self.parent = parent
 
+        self.list = ['MIN',
+                     'FGM',
+                     'FGA',
+                     'FG_PCT',
+                     'FG3M',
+                     'FG3A',
+                     'FG3_PCT',
+                     'FTM',
+                     'FTA',
+                     'FT_PCT',
+                     'OREB',
+                     'DREB',
+                     'REB',
+                     'AST',
+                     'STL',
+                     'BLK',
+                     'TOV',
+                     'PF',
+                     'PTS']
+
 
 class Players(object):
 
@@ -37,7 +57,7 @@ class Players(object):
         self.player_list = []
         self.player_id = []
         self.player_and_id_dict = []
-        self.stat_category = range(5, 24)
+        self.stat_category = range(8, 27)
         self.get_all_team_ids(team.TEAMS)
         self.full_player_list()
 
@@ -74,8 +94,8 @@ class Players(object):
         stats = player.PlayerCareer(player_id)
         for i in self.stat_category:
             try:
-                player_stat_name = stats.json['resultSets'][1]['headers'][i]
-                player_stat_data = stats.json['resultSets'][1]['rowSet'][0][i]
+                player_stat_name = stats.json['resultSets'][0]['headers'][i]
+                player_stat_data = stats.json['resultSets'][0]['rowSet'][-1][i]
             except IndexError:
                 print(i)
             player_stat_dict[player_stat_name] = player_stat_data

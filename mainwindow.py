@@ -134,29 +134,37 @@ class DataTable(QTableWidget, object):
         """
         stat = None
         player_id = None
-        category = []
 
-        count = self.columnCount()
-        for i in range(count):
+        category = []
+        col_count = self.columnCount()
+        for i in range(col_count):
             try:
                 name = self.horizontalHeaderItem(i).text()
             except AttributeError:
-                print('The header was empty, so dont display anything.')
                 name = None
+            category.append(name)
+
+        player = []
+        row_count = self.rowCount()
+        for i in range(row_count):
             try:
                 player_id = self.verticalHeaderItem(i).text()
             except AttributeError:
-                print('The header was empty, so dont display anything.')
-            category.append(name)
+                player_id = None
+            player.append(player_id)
 
         if text == 'player':
-            player_id = self.parent.all_players.player_and_id_dict[player_id]
-            player_stats = self.parent.all_players.get_player_stats(player_id)
-            for item in category:
-                if item in player_stats:
-                    print(player_stats[item])
-                    # data is (player_stats[item]) so put it in the right row
-            # find the column where item came from
+            for id_of_player in player:
+                try:
+                    player_id = self.parent.all_players.player_and_id_dict[id_of_player]
+                except Exception:
+                    print('Break here')
+                else:
+                    player_stats = self.parent.all_players.get_player_stats(player_id)
+                    for column, item in enumerate(category, start=0):
+                        if item in player_stats:
+                            item = str(player_stats[item])
+                            self.setItem(self.currentRow(), column, QTableWidgetItem(item))
 
 
 class Tracker(QMainWindow, object):
