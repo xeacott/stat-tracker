@@ -72,6 +72,9 @@ class DataTable(QTableWidget, object):
         super(DataTable, self).__init__(parent)
         self.parent = parent
 
+        self.stat = None
+        self.player_id = None
+
         self.wordWrap()
         self.setRowCount(10)
         self.setColumnCount(10)
@@ -132,9 +135,6 @@ class DataTable(QTableWidget, object):
             Position of header that changed, vertical or horizontal.
 
         """
-        stat = None
-        player_id = None
-
         category = []
         col_count = self.columnCount()
         for i in range(col_count):
@@ -156,14 +156,15 @@ class DataTable(QTableWidget, object):
         if text == 'player':
             for id_of_player in player:
                 try:
-                    player_id = self.parent.all_players.player_and_id_dict[id_of_player]
+                    self.player_id = self.parent.all_players.player_and_id_dict[id_of_player]
                 except Exception:
                     print('Break here')
                 else:
-                    player_stats = self.parent.all_players.get_player_stats(player_id)
+                    player_object = RetrievePlayer(self.parent)
+                    # TODO finished signal not going off
                     for column, item in enumerate(category, start=0):
-                        if item in player_stats:
-                            item = str(player_stats[item])
+                        if item in player_object:
+                            item = str(player_object[item])
                             self.setItem(self.currentRow(), column, QTableWidgetItem(item))
 
 

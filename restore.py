@@ -86,18 +86,62 @@ class Players(object):
                 self.player_and_id_dict = dict(zip(self.player_list, self.player_id))
 
 
-    def get_player_stats(self, player_id):
-        player_stat_dict = {}
-        full_list_of_data = []
+class RetrievePlayer(QObject, object):
+
+    """Spawn a thread and worker to retrieve player information."""
+
+    def __init__(self, parent):
+        super(RetrievePlayer, self).__init__()
+
+        self.parent = parent
+        self.thread = QThread()
+        self.worker = WorkerObject(self.parent)
+        self.worker.moveToThread(self.thread)
+
+        self.thread.started.connect(self.worker.get_player_stats)
+        self.worker.finished.connect(self.clean_up)
+        self.thread.start()
+
+
+    # NOT GETTING HIT
+    def clean_up(self):
+        print('Quitting thread')
+
+        self.thread.quit()
+
+
+class WorkerObject(QObject, object):
+
+    """Worker to get player data.
+
+    This object is pushed onto a thread. When finished, a signal is emitted back to the
+    thread letting it know to close gracefully. If the channel creation errors out the
+    exception is caught and printed to the python console.
+
+    """
+
+    finished = pyqtSignal()
+
+    def __init__(self, explorer):
+        super(WorkerObject, self).__init__()
+
+        self.explorer = explorer
+        self.player_stat_dict = {}
+        self.full_list_of_data = []
+        self.error_msg = None
+
+    def get_player_stats(self):
         player_stat_name = None
         player_stat_data = None
+        player_id = self.explorer.main_window.table_widget.player_id
         stats = player.PlayerCareer(player_id)
-        for i in self.stat_category:
+        for i in self.explorer.all_players.stat_category:
             try:
                 player_stat_name = stats.json['resultSets'][0]['headers'][i]
                 player_stat_data = stats.json['resultSets'][0]['rowSet'][-1][i]
             except IndexError:
                 print(i)
-            player_stat_dict[player_stat_name] = player_stat_data
-            full_list_of_data.append(player_stat_dict)
-        return player_stat_dict
+            self.player_stat_dict[player_stat_name] = player_stat_data
+            self.full_list_of_data.append(self.player_stat_dict)
+
+        self.finished.emit()

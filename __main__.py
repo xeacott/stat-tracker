@@ -10,6 +10,15 @@ from PyQt5.QtWidgets import *
 
 MAIN_WINDOW = import_module('mainwindow')
 
+from PyQt5 import QtCore
+import traceback, sys
+
+
+if QtCore.QT_VERSION >= 0x50501:
+    def excepthook(type_, value, traceback_):
+        traceback.print_exception(type_, value, traceback_)
+        QtCore.qFatal('')
+sys.excepthook = excepthook
 
 def main():
     """Drive application upon startup and setup environment."""
