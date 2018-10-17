@@ -7,6 +7,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from nba_api.stats.endpoints import playerfantasyprofile
+from nba_api.stats.library import data
+
+
 """
     new_category file to hold model and data for dialog to enter new category information.
 
@@ -100,10 +104,8 @@ class PlayerDialog(QDialog, object):
         result = dialog.exec_()
         accepted = False
         if result == QDialog.Accepted:
-            approved = dialog.test_text_cb()
-            if approved:
-                parent.player_cache.player = dialog.player.text()
-                accepted = True
+            parent.player_cache.player = dialog.player.text()
+            accepted = True
         return accepted
 
 
@@ -119,6 +121,10 @@ class PlayerEntry(QLineEdit, object):
         self.completer = QCompleter()
         self.setCompleter(self.completer)
 
-        my_completer = QCompleter(self.parent.all_players.player_list, self)
+        self.t = []
+        for name in data.players:
+            self.t.append(name[3])
+
+        my_completer = QCompleter(self.t)
         my_completer.setCaseSensitivity(1)
         self.setCompleter(my_completer)

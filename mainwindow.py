@@ -6,6 +6,8 @@ import os
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from nba_api.stats.library import data
+from nba_api.stats.endpoints import commonplayerinfo
 
 # Relative Imports
 from new_category import *
@@ -25,41 +27,133 @@ class MainWindow(QWidget, object):
 
     def __init__(self, parent):
         super(MainWindow, self).__init__(parent)
-        self.parent = parent  # parent is CipExplorer
+        self.parent = parent
 
         # Menubar / Statusbar
         self.menubar = MenuBar(parent)
         self.statusbar = StatusBar(parent)
 
-        # Declare layouts
-        layout = QHBoxLayout()
-        middle_table = QVBoxLayout()
+        # Create main layout
+        hbox = QHBoxLayout()
 
-        # Center Table Widget and Buttons
+        splitter = QSplitter(Qt.Horizontal)
+        splitter.addWidget(self.create_draft_table())
+        splitter.addWidget(self.create_player_characteristics())
+        splitter.setStretchFactor(1, 1)
+        splitter.setSizes([1000, 250])
+
+        hbox.addWidget(splitter)
+        self.setLayout(hbox)
+        self.setMinimumSize(1450, 750)
+
+    def create_draft_table(self):
+        group_box = QGroupBox("&Draft Table")
+        group_box.setStyleSheet("QGroupBox {  border: 4px solid gray;}")
+
+        # Left side Table Widget and Button
         self.table_widget = DataTable(self.parent)
+        table_size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.MinimumExpanding)
+        self.table_widget.setSizePolicy(table_size_policy)
 
         go_live_button = QPushButton("Go Live!")
         go_live_button.setToolTip("Allow for live stats to update.")
-        go_live_policy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Minimum)
+        go_live_policy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
         go_live_button.setSizePolicy(go_live_policy)
 
-        middle_table.addWidget(go_live_button, alignment=Qt.AlignCenter)
-        middle_table.addSpacerItem(QSpacerItem(0, 25))
-        middle_table.addWidget(self.table_widget)
+        draft_table_layout = QVBoxLayout()
 
-        # Set layouts
-        layout.addLayout(middle_table)
+        draft_table_layout.addWidget(self.table_widget)
+        draft_table_layout.addSpacerItem(QSpacerItem(0, 50))
+        draft_table_layout.addWidget(go_live_button, alignment=Qt.AlignCenter)
+
+        group_box.setLayout(draft_table_layout)
 
         # Set signals
         go_live_button.clicked.connect(self.go_live_cb)
 
-        self.setLayout(layout)
-        self.setMinimumSize(950, 450)
+        return group_box
+
+    def create_player_characteristics(self):
+        group_box = QGroupBox("Player Information")
+        group_box.setStyleSheet("QGroupBox {  border: 4px solid gray;}")
+        grid_layout = QGridLayout()
+
+        search_box = QHBoxLayout()
+        name_and_number_box = QHBoxLayout()
+        career_avg_box = QHBoxLayout()
+        info_box = QHBoxLayout()
+
+        # Search bar
+        player_search = PlayerEntry(self)
+        player_search.setPlaceholderText("Search...")
+
+        # Hold player names and IDs
+        self.players = []
+        for name in data.players:
+            self.players.append(name)
+
+        divider_line = QFrame()
+        divider_line.setFrameShape(QFrame.HLine)
+        divider_line.setFrameShadow(QFrame.Sunken)
+
+        # Right side player information
+        label_player_name = QLabel("Number and Name")
+        label_pts = QLabel("PTS")
+        label_reb = QLabel("REB")
+        label_ast = QLabel("AST")
+        label_pie = QLabel("PIE")
+
+        label_ht = QLabel("HT")
+        label_wt = QLabel("WT")
+        label_age = QLabel("Age")
+        label_born = QLabel("Born")
+
+        # Add widgets into horizontal layouts
+        search_box.addWidget(player_search, alignment=Qt.AlignCenter)
+
+        name_and_number_box.addWidget(label_player_name, alignment=Qt.AlignCenter)
+
+        career_avg_box.addWidget(label_pts, alignment=Qt.AlignTop)
+        career_avg_box.addWidget(label_reb, alignment=Qt.AlignTop)
+        career_avg_box.addWidget(label_ast, alignment=Qt.AlignTop)
+        career_avg_box.addWidget(label_pie, alignment=Qt.AlignTop)
+
+        info_box.addWidget(label_ht, alignment=Qt.AlignTop)
+        info_box.addWidget(label_wt, alignment=Qt.AlignTop)
+        info_box.addWidget(label_age, alignment=Qt.AlignTop)
+        info_box.addWidget(label_born, alignment=Qt.AlignTop)
+
+        # Add horizontal layouts into grid layout
+        grid_layout.addItem(search_box)
+        grid_layout.addWidget(divider_line)
+
+        grid_layout.addItem(name_and_number_box)
+        grid_layout.addItem(QSpacerItem(0, 100))
+
+        grid_layout.addItem(career_avg_box)
+        grid_layout.addItem(info_box)
+        grid_layout.addItem(QSpacerItem(0, 100))
+
+        group_box.setLayout(grid_layout)
+
+        # Signals
+        player_search.textChanged.connect(self.refresh_data_cb)
+
+        return group_box
 
     # CALLBACKS----------
     def go_live_cb(self):
         """Handle updating the table with live data."""
         print('Go live!')
+
+    def refresh_data_cb(self):
+        """Handle updating the player information section."""
+        sender = self.sender()
+
+        for sublist in self.players:
+            if sublist[3] == sender.text():
+                player_info = commonplayerinfo.CommonPlayerInfo(player_id=sublist[0])
+                print(player_info)
 
 
 class DataTable(QTableWidget, object):
@@ -75,7 +169,8 @@ class DataTable(QTableWidget, object):
         self.stat = None
         self.player_id = None
 
-        self.wordWrap()
+        self.setWordWrap(True)
+        self.setTextElideMode(Qt.ElideNone)
         self.setRowCount(10)
         self.setColumnCount(10)
         self.setCornerButtonEnabled(True)
@@ -86,40 +181,51 @@ class DataTable(QTableWidget, object):
         self.vertical_header = self.verticalHeader()
         self.vertical_header.setSectionResizeMode(QHeaderView.Stretch)
 
+        for index in range(self.columnCount()):
+            header = QTableWidgetItem()
+            header.setText("Category {}".format(index + 1))
+            self.setHorizontalHeaderItem(index, header)
+
+        for index in range(self.rowCount()):
+            header = QTableWidgetItem()
+            header.setText("Player {}".format(index + 1))
+            self.setVerticalHeaderItem(index, header)
+
+
         # Signals
         self.horizontal_header.sectionDoubleClicked.connect(self.set_horizontal_headers)
         self.vertical_header.sectionDoubleClicked.connect(self.set_vertical_headers)
         self.completed[str].connect(self.display_data)
 
 
-    def set_horizontal_headers(self, i):
+    def set_horizontal_headers(self):
         """Set the horizontal headers, user requested.
 
         :param list headers:
             List of categories user wishes to see.
 
         """
-        i = self.currentColumn()
         header = QTableWidgetItem()
         accepted = CategoryDialog.get_settings(self.parent)
         if accepted:
             header.setText(self.parent.category_cache.category)
-            self.setHorizontalHeaderItem(i, header)
+            header.setTextAlignment(Qt.TextWordWrap)
+            self.setHorizontalHeaderItem(self.currentColumn(), header)
             self.completed.emit('category')
 
-    def set_vertical_headers(self, i):
+    def set_vertical_headers(self):
         """Set the vertical headers, user requested.
 
         :param list headers:
             List of players user wishes to see.
 
         """
-        i = self.currentRow()
         header = QTableWidgetItem()
         accepted = PlayerDialog.get_settings(self.parent)
         if accepted:
             header.setText(self.parent.player_cache.player)
-            self.setVerticalHeaderItem(i, header)
+            header.setTextAlignment(Qt.TextWordWrap)
+            self.setVerticalHeaderItem(self.currentRow(), header)
             self.completed.emit('player')
 
     def display_data(self, text):
@@ -186,8 +292,8 @@ class Tracker(QMainWindow, object):
 
         self.category_cache = CategoryDialogSettings()
         self.player_cache = PlayerDialogSettings()
-        self.all_categories = Categories(self)
-        self.all_players = Players(self)
+        # self.all_categories = Categories(self)
+        # self.all_players = Players(self)
 
         self.main_window = MainWindow(self)
         self.setCentralWidget(self.main_window)

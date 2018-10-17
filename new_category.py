@@ -7,6 +7,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from nba_api.stats.endpoints import playerfantasyprofile
+
+
 """
     new_category file to hold model and data for dialog to enter new category information.
 
@@ -100,10 +103,8 @@ class CategoryDialog(QDialog, object):
         result = dialog.exec_()
         accepted = False
         if result == QDialog.Accepted:
-            approved = dialog.test_text_cb()
-            if approved:
-                parent.category_cache.category = dialog.category.text()
-                accepted = True
+            parent.category_cache.category = dialog.category.text()
+            accepted = True
         return accepted
 
 
@@ -119,7 +120,10 @@ class CategoryEntry(QLineEdit, object):
         self.completer = QCompleter()
         self.setCompleter(self.completer)
 
-        self.t = self.parent.all_categories.list
+        self.t = []
+        for category in playerfantasyprofile.PlayerFantasyProfile.expected_data['Overall']:
+            self.t.append(category)
+
         my_completer = QCompleter(self.t, self)
         my_completer.setCaseSensitivity(1)
         self.setCompleter(my_completer)
