@@ -171,14 +171,14 @@ class DataTable(QTableWidget, object):
 
         self.setWordWrap(True)
         self.setRowCount(10)
-        self.setColumnCount(10)
+        self.setColumnCount(20)
         self.setCornerButtonEnabled(True)
 
         self.horizontal_header = self.horizontalHeader()
         self.horizontal_header.setDefaultAlignment(Qt.AlignCenter)
         self.horizontal_header.setSectionsMovable(True)
-        # Fix this
-        self.horizontal_header.setSectionResizeMode(QHeaderView.ResizeToContents & QHeaderView.Stretch)
+        self.horizontal_header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.horizontal_header.setStretchLastSection(True)
 
         self.vertical_header = self.verticalHeader()
         self.vertical_header.setDefaultAlignment(Qt.AlignCenter)
