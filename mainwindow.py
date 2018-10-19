@@ -39,8 +39,8 @@ class MainWindow(QWidget, object):
         splitter = QSplitter(Qt.Horizontal)
         splitter.addWidget(self.create_draft_table())
         splitter.addWidget(self.create_player_characteristics())
-        splitter.setStretchFactor(1, 1)
-        splitter.setSizes([1000, 250])
+        splitter.setStretchFactor(0, 1)
+        splitter.setSizes([1200, 250])
 
         hbox.addWidget(splitter)
         self.setLayout(hbox)
@@ -52,7 +52,7 @@ class MainWindow(QWidget, object):
 
         # Left side Table Widget and Button
         self.table_widget = DataTable(self.parent)
-        table_size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.MinimumExpanding)
+        table_size_policy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         self.table_widget.setSizePolicy(table_size_policy)
 
         go_live_button = QPushButton("Go Live!")
@@ -170,15 +170,19 @@ class DataTable(QTableWidget, object):
         self.player_id = None
 
         self.setWordWrap(True)
-        self.setTextElideMode(Qt.ElideNone)
         self.setRowCount(10)
         self.setColumnCount(10)
         self.setCornerButtonEnabled(True)
 
         self.horizontal_header = self.horizontalHeader()
-        self.horizontal_header.setSectionResizeMode(QHeaderView.Stretch)
+        self.horizontal_header.setDefaultAlignment(Qt.AlignCenter)
+        self.horizontal_header.setSectionsMovable(True)
+        # Fix this
+        self.horizontal_header.setSectionResizeMode(QHeaderView.ResizeToContents & QHeaderView.Stretch)
 
         self.vertical_header = self.verticalHeader()
+        self.vertical_header.setDefaultAlignment(Qt.AlignCenter)
+        self.vertical_header.setSectionsMovable(True)
         self.vertical_header.setSectionResizeMode(QHeaderView.Stretch)
 
         for index in range(self.columnCount()):
@@ -190,7 +194,6 @@ class DataTable(QTableWidget, object):
             header = QTableWidgetItem()
             header.setText("Player {}".format(index + 1))
             self.setVerticalHeaderItem(index, header)
-
 
         # Signals
         self.horizontal_header.sectionDoubleClicked.connect(self.set_horizontal_headers)
