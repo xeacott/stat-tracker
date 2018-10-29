@@ -29,7 +29,6 @@ class PlayerDialogSettings(object):
 
     def __init__(self):
         self._player = None
-        self.success = False
 
     @property
     def player(self):
@@ -66,9 +65,15 @@ class PlayerDialog(QDialog, object):
         # Declare layouts
         layout = QVBoxLayout(self)
 
+        # Label displaying information
+        self.label = QLabel(
+            "Type in an NBA player to draw statistics from. "
+            "This field supports auto-complete.")
+        self.label.setStyleSheet("QLabel {font-size: 14px;}")
+
         # Custom tab as main view
         self.player = PlayerEntry(parent)
-        layout.addWidget(self.player, alignment=Qt.AlignCenter)
+        self.player.setPlaceholderText("Search...")
 
         # OK and Cancel buttons
         self.buttons = QDialogButtonBox(
@@ -76,6 +81,9 @@ class PlayerDialog(QDialog, object):
             Qt.Horizontal, self)
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.player, alignment=Qt.AlignCenter)
         layout.addWidget(self.buttons)
 
         self.setMinimumSize(350, 250)
@@ -84,7 +92,7 @@ class PlayerDialog(QDialog, object):
     #CALLBACKS-------------------
     def test_text_cb(self):
         approved = True
-        if not self.player.text() in self.parent.all_players.player_list:
+        if not self.player.text() in self.parent.all_players.abv_player_list:
             QMessageBox.about(self,
                               'Notice!',
                               'Player not loaded, please try again.')
@@ -104,13 +112,14 @@ class PlayerDialog(QDialog, object):
         result = dialog.exec_()
         accepted = False
         if result == QDialog.Accepted:
-            parent.player_cache.player = dialog.player.text()
-            accepted = True
+            approved = dialog.test_text_cb()
+            if approved:
+                parent.player_cache.player = dialog.player.text()
+                accepted = True
         return accepted
 
 
 class PlayerEntry(QLineEdit, object):
-
 
     """Line edit to support auto-complete and other various methods needed for players."""
 
@@ -118,13 +127,15 @@ class PlayerEntry(QLineEdit, object):
         super(PlayerEntry, self).__init__(parent)
         self.parent = parent
 
+        list = []
         self.completer = QCompleter()
         self.setCompleter(self.completer)
 
-        self.t = []
-        for name in data.players:
-            self.t.append(name[3])
+        try:
+            list = self.parent.all_players.abv_player_list
+        except AttributeError:
+            pass
 
-        my_completer = QCompleter(self.t)
+        my_completer = QCompleter(list)
         my_completer.setCaseSensitivity(1)
         self.setCompleter(my_completer)

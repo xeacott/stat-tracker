@@ -19,14 +19,6 @@ class MenuBar(object):
         # FILE MENU
         file_mb = menubar.addMenu("File")
 
-        new_tab = QAction("New Tab", parent)
-        new_tab.setShortcut("Ctrl+T")
-        file_mb.addAction(new_tab)
-
-        compare = QAction("Compare", parent)
-        compare.setShortcut("Ctrl+C")
-        file_mb.addAction(compare)
-
         settings = QAction("Options...", parent)
         file_mb.addAction(settings)
 
@@ -42,7 +34,7 @@ class MenuBar(object):
         # HELP MENU
         help_mb = menubar.addMenu("Help")
 
-        cip_object_help = QAction("Explorer Help", parent)
+        cip_object_help = QAction("Stat Tracker Help", parent)
         cip_object_help.setShortcut("Ctrl+H")
         help_mb.addAction(cip_object_help)
 

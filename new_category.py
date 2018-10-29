@@ -7,7 +7,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from nba_api.stats.endpoints import playerfantasyprofile
+# Relative Imports
+# none
 
 
 """
@@ -28,7 +29,6 @@ class CategoryDialogSettings(object):
 
     def __init__(self):
         self._category = None
-        self.success = False
 
     @property
     def category(self):
@@ -65,9 +65,13 @@ class CategoryDialog(QDialog, object):
         # Declare layouts
         layout = QVBoxLayout(self)
 
+        # Label displaying information
+        self.label = QLabel("Select which category to draw statistics for.")
+        self.label.setStyleSheet("QLabel {font-size: 14px;}")
+
         # Custom tab as main view
-        self.category = CategoryEntry(parent)
-        layout.addWidget(self.category, alignment=Qt.AlignCenter)
+        self.category = QComboBox()
+        self.category.addItems(parent.all_categories.list)
 
         # OK and Cancel buttons
         self.buttons = QDialogButtonBox(
@@ -75,20 +79,13 @@ class CategoryDialog(QDialog, object):
             Qt.Horizontal, self)
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.category, alignment=Qt.AlignCenter)
         layout.addWidget(self.buttons)
 
         self.setMinimumSize(350, 250)
         self.setWindowTitle("Set Category")
-
-    #CALLBACKS-------------------
-    def test_text_cb(self):
-        approved = True
-        if not self.category.text() in self.parent.all_categories.list:
-            QMessageBox.about(self,
-                              'Notice!',
-                              'Category not loaded, please try again.')
-            approved = False
-        return approved
 
     @staticmethod
     def get_settings(parent):
@@ -103,27 +100,7 @@ class CategoryDialog(QDialog, object):
         result = dialog.exec_()
         accepted = False
         if result == QDialog.Accepted:
-            parent.category_cache.category = dialog.category.text()
+            parent.category_cache.category = dialog.category.currentText()
             accepted = True
         return accepted
 
-
-class CategoryEntry(QLineEdit, object):
-
-
-    """Line edit to support auto-complete and other various methods needed for categories."""
-
-    def __init__(self, parent):
-        super(CategoryEntry, self).__init__(parent)
-        self.parent = parent
-
-        self.completer = QCompleter()
-        self.setCompleter(self.completer)
-
-        self.t = []
-        for category in playerfantasyprofile.PlayerFantasyProfile.expected_data['Overall']:
-            self.t.append(category)
-
-        my_completer = QCompleter(self.t, self)
-        my_completer.setCaseSensitivity(1)
-        self.setCompleter(my_completer)

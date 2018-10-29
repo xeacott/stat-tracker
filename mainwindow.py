@@ -10,10 +10,12 @@ from nba_api.stats.library import data
 from nba_api.stats.endpoints import commonplayerinfo
 
 # Relative Imports
+from draft_table import *
 from new_category import *
 from new_player import *
-from menu_status_bars import *
-from restore import *
+from menu_status_bars import MenuBar, StatusBar
+from restore import Categories, Players
+from worker import RefreshGames
 
 
 class MainWindow(QWidget, object):
@@ -37,8 +39,11 @@ class MainWindow(QWidget, object):
         hbox = QHBoxLayout()
 
         splitter = QSplitter(Qt.Horizontal)
-        splitter.addWidget(self.create_draft_table())
-        splitter.addWidget(self.create_player_characteristics())
+
+        self.draft_table = self.create_draft_table()
+        self.player_chars = self.create_player_characteristics()
+        splitter.addWidget(self.draft_table)
+        splitter.addWidget(self.player_chars)
         splitter.setStretchFactor(0, 1)
         splitter.setSizes([1200, 250])
 
@@ -47,35 +52,60 @@ class MainWindow(QWidget, object):
         self.setMinimumSize(1450, 750)
 
     def create_draft_table(self):
-        group_box = QGroupBox("&Draft Table")
-        group_box.setStyleSheet("QGroupBox {  border: 4px solid gray;}")
+        group_box = QGroupBox("Draft Table")
+        group_box.setStyleSheet("QGroupBox {font-size: 16px;}")
 
         # Left side Table Widget and Button
         self.table_widget = DataTable(self.parent)
         table_size_policy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         self.table_widget.setSizePolicy(table_size_policy)
 
-        go_live_button = QPushButton("Go Live!")
-        go_live_button.setToolTip("Allow for live stats to update.")
-        go_live_policy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        go_live_button.setSizePolicy(go_live_policy)
-
         draft_table_layout = QVBoxLayout()
+        game_set_one = QHBoxLayout()
+        game_set_two = QHBoxLayout()
+
+        game1 = QLabel("Game 1")
+        game2 = QLabel("Game 2")
+        game3 = QLabel("Game 3")
+        game4 = QLabel("Game 4")
+        game5 = QLabel("Game 5")
+        game6 = QLabel("Game 6")
+
+        game7 = QLabel("Game 7")
+        game8 = QLabel("Game 8")
+        game9 = QLabel("Game 9")
+        game10 = QLabel("Game 10")
+        game11 = QLabel("Game 11")
+        game12 = QLabel("Game 12")
+
+        game_set_one.addWidget(game1, alignment=Qt.AlignCenter)
+        game_set_one.addWidget(game2, alignment=Qt.AlignCenter)
+        game_set_one.addWidget(game3, alignment=Qt.AlignCenter)
+        game_set_one.addWidget(game4, alignment=Qt.AlignCenter)
+        game_set_one.addWidget(game5, alignment=Qt.AlignCenter)
+        game_set_one.addWidget(game6, alignment=Qt.AlignCenter)
+
+        game_set_two.addWidget(game7, alignment=Qt.AlignCenter)
+        game_set_two.addWidget(game8, alignment=Qt.AlignCenter)
+        game_set_two.addWidget(game9, alignment=Qt.AlignCenter)
+        game_set_two.addWidget(game10, alignment=Qt.AlignCenter)
+        game_set_two.addWidget(game11, alignment=Qt.AlignCenter)
+        game_set_two.addWidget(game12, alignment=Qt.AlignCenter)
 
         draft_table_layout.addWidget(self.table_widget)
-        draft_table_layout.addSpacerItem(QSpacerItem(0, 50))
-        draft_table_layout.addWidget(go_live_button, alignment=Qt.AlignCenter)
+        draft_table_layout.addSpacerItem(QSpacerItem(0, 20))
+        draft_table_layout.addLayout(game_set_one)
+        draft_table_layout.addSpacerItem(QSpacerItem(0, 35))
+        draft_table_layout.addLayout(game_set_two)
+        draft_table_layout.addSpacerItem(QSpacerItem(0, 35))
 
         group_box.setLayout(draft_table_layout)
-
-        # Set signals
-        go_live_button.clicked.connect(self.go_live_cb)
 
         return group_box
 
     def create_player_characteristics(self):
         group_box = QGroupBox("Player Information")
-        group_box.setStyleSheet("QGroupBox {  border: 4px solid gray;}")
+        group_box.setStyleSheet("QGroupBox {font-size: 16px;}")
         grid_layout = QGridLayout()
 
         search_box = QHBoxLayout()
@@ -86,11 +116,6 @@ class MainWindow(QWidget, object):
         # Search bar
         player_search = PlayerEntry(self)
         player_search.setPlaceholderText("Search...")
-
-        # Hold player names and IDs
-        self.players = []
-        for name in data.players:
-            self.players.append(name)
 
         divider_line = QFrame()
         divider_line.setFrameShape(QFrame.HLine)
@@ -142,10 +167,6 @@ class MainWindow(QWidget, object):
         return group_box
 
     # CALLBACKS----------
-    def go_live_cb(self):
-        """Handle updating the table with live data."""
-        print('Go live!')
-
     def refresh_data_cb(self):
         """Handle updating the player information section."""
         sender = self.sender()
@@ -154,127 +175,6 @@ class MainWindow(QWidget, object):
             if sublist[3] == sender.text():
                 player_info = commonplayerinfo.CommonPlayerInfo(player_id=sublist[0])
                 print(player_info)
-
-
-class DataTable(QTableWidget, object):
-
-    """Give user a nice way to view the information requested."""
-
-    completed = pyqtSignal(str)
-
-    def __init__(self, parent):
-        super(DataTable, self).__init__(parent)
-        self.parent = parent
-
-        self.stat = None
-        self.player_id = None
-
-        self.setWordWrap(True)
-        self.setRowCount(10)
-        self.setColumnCount(20)
-        self.setCornerButtonEnabled(True)
-
-        self.horizontal_header = self.horizontalHeader()
-        self.horizontal_header.setDefaultAlignment(Qt.AlignCenter)
-        self.horizontal_header.setSectionsMovable(True)
-        self.horizontal_header.setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.horizontal_header.setStretchLastSection(True)
-
-        self.vertical_header = self.verticalHeader()
-        self.vertical_header.setDefaultAlignment(Qt.AlignCenter)
-        self.vertical_header.setSectionsMovable(True)
-        self.vertical_header.setSectionResizeMode(QHeaderView.Stretch)
-
-        for index in range(self.columnCount()):
-            header = QTableWidgetItem()
-            header.setText("Category {}".format(index + 1))
-            self.setHorizontalHeaderItem(index, header)
-
-        for index in range(self.rowCount()):
-            header = QTableWidgetItem()
-            header.setText("Player {}".format(index + 1))
-            self.setVerticalHeaderItem(index, header)
-
-        # Signals
-        self.horizontal_header.sectionDoubleClicked.connect(self.set_horizontal_headers)
-        self.vertical_header.sectionDoubleClicked.connect(self.set_vertical_headers)
-        self.completed[str].connect(self.display_data)
-
-
-    def set_horizontal_headers(self):
-        """Set the horizontal headers, user requested.
-
-        :param list headers:
-            List of categories user wishes to see.
-
-        """
-        header = QTableWidgetItem()
-        accepted = CategoryDialog.get_settings(self.parent)
-        if accepted:
-            header.setText(self.parent.category_cache.category)
-            header.setTextAlignment(Qt.TextWordWrap)
-            self.setHorizontalHeaderItem(self.currentColumn(), header)
-            self.completed.emit('category')
-
-    def set_vertical_headers(self):
-        """Set the vertical headers, user requested.
-
-        :param list headers:
-            List of players user wishes to see.
-
-        """
-        header = QTableWidgetItem()
-        accepted = PlayerDialog.get_settings(self.parent)
-        if accepted:
-            header.setText(self.parent.player_cache.player)
-            header.setTextAlignment(Qt.TextWordWrap)
-            self.setVerticalHeaderItem(self.currentRow(), header)
-            self.completed.emit('player')
-
-    def display_data(self, text):
-        """Update cell according to user input.
-
-        Handles updating all data for each player and category requested.
-        If the sender is a category, scan the list of currently active players, and
-        for each of the categories specified, then list that data. If the sender is
-        a player, scan the list of currently active categories and apply them to the
-        player.
-
-        :param str text:
-            Position of header that changed, vertical or horizontal.
-
-        """
-        category = []
-        col_count = self.columnCount()
-        for i in range(col_count):
-            try:
-                name = self.horizontalHeaderItem(i).text()
-            except AttributeError:
-                name = None
-            category.append(name)
-
-        player = []
-        row_count = self.rowCount()
-        for i in range(row_count):
-            try:
-                player_id = self.verticalHeaderItem(i).text()
-            except AttributeError:
-                player_id = None
-            player.append(player_id)
-
-        if text == 'player':
-            for id_of_player in player:
-                try:
-                    self.player_id = self.parent.all_players.player_and_id_dict[id_of_player]
-                except Exception:
-                    print('Break here')
-                else:
-                    player_object = RetrievePlayer(self.parent)
-                    # TODO finished signal not going off
-                    for column, item in enumerate(category, start=0):
-                        if item in player_object:
-                            item = str(player_object[item])
-                            self.setItem(self.currentRow(), column, QTableWidgetItem(item))
 
 
 class Tracker(QMainWindow, object):
@@ -295,10 +195,11 @@ class Tracker(QMainWindow, object):
 
         self.category_cache = CategoryDialogSettings()
         self.player_cache = PlayerDialogSettings()
-        # self.all_categories = Categories(self)
-        # self.all_players = Players(self)
+        self.all_categories = Categories(self)
+        self.all_players = Players(self)
 
         self.main_window = MainWindow(self)
+        self.worker = RefreshGames(self)
         self.setCentralWidget(self.main_window)
 
     # CALLBACKS----------
