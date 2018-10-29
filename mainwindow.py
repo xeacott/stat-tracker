@@ -14,6 +14,7 @@ from new_category import *
 from new_player import *
 from menu_status_bars import *
 from restore import *
+from worker import RefreshGames
 
 
 class MainWindow(QWidget, object):
@@ -37,8 +38,12 @@ class MainWindow(QWidget, object):
         hbox = QHBoxLayout()
 
         splitter = QSplitter(Qt.Horizontal)
-        splitter.addWidget(self.create_draft_table())
-        splitter.addWidget(self.create_player_characteristics())
+        self.draft_table = self.create_draft_table()
+        self.player_chars = self.create_player_characteristics()
+
+        splitter.addWidget(self.draft_table)
+        splitter.addWidget(self.player_chars)
+
         splitter.setStretchFactor(0, 1)
         splitter.setSizes([1200, 250])
 
@@ -55,21 +60,18 @@ class MainWindow(QWidget, object):
         table_size_policy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         self.table_widget.setSizePolicy(table_size_policy)
 
-        go_live_button = QPushButton("Go Live!")
-        go_live_button.setToolTip("Allow for live stats to update.")
+        self.go_live_button = QLabel("Game 1")
+        self.go_live_button.setToolTip("Allow for live stats to update.")
         go_live_policy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        go_live_button.setSizePolicy(go_live_policy)
+        self.go_live_button.setSizePolicy(go_live_policy)
 
         draft_table_layout = QVBoxLayout()
 
         draft_table_layout.addWidget(self.table_widget)
         draft_table_layout.addSpacerItem(QSpacerItem(0, 50))
-        draft_table_layout.addWidget(go_live_button, alignment=Qt.AlignCenter)
+        draft_table_layout.addWidget(self.go_live_button, alignment=Qt.AlignCenter)
 
         group_box.setLayout(draft_table_layout)
-
-        # Set signals
-        go_live_button.clicked.connect(self.go_live_cb)
 
         return group_box
 
@@ -295,10 +297,10 @@ class Tracker(QMainWindow, object):
 
         self.category_cache = CategoryDialogSettings()
         self.player_cache = PlayerDialogSettings()
-        # self.all_categories = Categories(self)
-        # self.all_players = Players(self)
-
         self.main_window = MainWindow(self)
+        self.worker = RefreshGames(self)
+
+        # Set the central widget into the main window
         self.setCentralWidget(self.main_window)
 
     # CALLBACKS----------
