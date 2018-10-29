@@ -35,8 +35,10 @@ class RefreshGames(QObject, object):
 
     def refresh_game_data_cb(self, data):
         """Update the game scores on the main window.
+
         :param data str:
             string that contains game data such as score, quarter, time remaining
+
         """
 
         if not self.parent.main_window.go_live_button.text() == data:
