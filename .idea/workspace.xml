@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a755a3d-db78-4a08-ae60-a19867493721" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/worker_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/stat-tracker.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/stat-tracker.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainwindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/worker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/worker_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/worker_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,14 +53,55 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="124896071">
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="13" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="13" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="py" value="4887" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Python" value="4887" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mainwindow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
-              <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+            <state relative-caret-position="231">
+              <caret line="127" column="50" selection-start-line="127" selection-start-column="50" selection-end-line="127" selection-end-column="50" />
+              <folding>
+                <element signature="e#50#59#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/draft_table.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2040">
+              <caret line="120" selection-start-line="120" selection-end-line="120" />
               <folding>
                 <element signature="e#50#59#0" expanded="true" />
               </folding>
@@ -72,60 +112,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/worker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="1156">
+              <caret line="68" column="66" lean-forward="true" selection-start-line="68" selection-start-column="66" selection-end-line="68" selection-end-column="66" />
               <folding>
-                <element signature="e#0#71#0" expanded="true" />
+                <element signature="e#19#48#0" expanded="true" />
+                <marker date="1540846630462" expanded="true" signature="1340:2138" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/draft_table.py">
+        <entry file="file://$PROJECT_DIR$/new_category.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
-              <folding>
-                <element signature="e#50#59#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/new_player.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2142">
-              <caret line="132" selection-start-line="132" selection-end-line="132" />
-              <folding>
-                <element signature="e#50#59#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/player_search.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
-              <folding>
-                <element signature="e#50#59#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/menu_status_bars.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="867">
-              <caret line="54" selection-start-line="54" selection-end-line="54" />
-              <folding>
-                <element signature="e#50#59#0" expanded="true" />
-              </folding>
-            </state>
+            <state relative-caret-position="-255" />
           </provider>
         </entry>
       </file>
@@ -135,9 +135,13 @@
     <findStrings>
       <find>client=t</find>
       <find>timeLine</find>
+      <find>QtGui</find>
+      <find>age</find>
+      <find>Expanding</find>
     </findStrings>
     <replaceStrings>
       <replace>time_line</replace>
+      <replace />
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -148,16 +152,16 @@
       <list>
         <option value="$PROJECT_DIR$/restore.py" />
         <option value="$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/nba_py/__init__.py" />
-        <option value="$PROJECT_DIR$/mainwindow.py" />
+        <option value="$PROJECT_DIR$/worker_test.py" />
         <option value="$PROJECT_DIR$/worker.py" />
+        <option value="$PROJECT_DIR$/mainwindow.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="420" />
-    <option name="y" value="-33" />
-    <option name="width" value="1941" />
-    <option name="height" value="2112" />
+    <option name="x" value="1270" />
+    <option name="width" value="1300" />
+    <option name="height" value="1400" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -165,7 +169,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -177,10 +180,11 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../thread" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -195,7 +199,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.__main__">
     <configuration name="__main__" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="stat-tracker" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -217,9 +221,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="worker_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="stat-tracker" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/worker_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.__main__" />
+      <item itemvalue="Python.worker_test" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.__main__" />
+        <item itemvalue="Python.worker_test" />
       </list>
     </recent_temporary>
   </component>
@@ -248,7 +278,14 @@
       <option name="project" value="LOCAL" />
       <updated>1539989180596</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Merge branch 'master' of github.com:xeacott/stat-tracker&#10;&#10;# Conflicts:&#10;#&#9;mainwindow.py&#10;#&#9;worker.py">
+      <created>1540830033763</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1540830033763</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -262,21 +299,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49884528" visible="true" weight="0.16345678" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49884528" visible="true" weight="0.08" />
       <window_info id="Structure" order="1" sideWeight="0.5011547" side_tool="true" weight="0.1772655" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3257443" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.79509634" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.16213495" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4997531" weight="0.5629406" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32924694" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32924694" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50024694" side_tool="true" weight="0.58912385" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32930514" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -287,7 +325,71 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fix some stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix some stuff" />
+    <MESSAGE value="Merge branch 'master' of github.com:xeacott/stat-tracker&#10;&#10;# Conflicts:&#10;#&#9;mainwindow.py&#10;#&#9;worker.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of github.com:xeacott/stat-tracker&#10;&#10;# Conflicts:&#10;#&#9;mainwindow.py&#10;#&#9;worker.py" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="current_scoreboard_info.line_score" />
+        <watch expression="__py_debug_temp_var_1740709984[0]" />
+        <watch expression="data" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="evaluateCodeFragment">
+      <expression>
+        <expression-string>player_info.data_sets[1].data['data'][0][2]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>player_info.common_player_info.data['data'][0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>player_info.data_sets[1].data['data'][0][4]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>player_info.data_sets[1].data['data'][0][3]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>player_info.common_player_info.data['data'][0][6][0:10]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>player_info.common_player_info.data['data'][0][6][0:12]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>player_info.common_player_info.data['data'][0][6]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>player_info.common_player_info.data['data'][0][3]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.parent</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.parent.main_window</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+    </expressions>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/__init__.py">
@@ -300,15 +402,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="867">
           <caret line="54" selection-start-line="54" selection-end-line="54" />
-          <folding>
-            <element signature="e#50#59#0" expanded="true" />
-          </folding>
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/new_category.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1653" />
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/nba_py/constants.py" />
@@ -322,10 +416,59 @@
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/nba_py/__init__.py" />
     <entry file="file://$PROJECT_DIR$/nba_cache.sqlite" />
     <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/699401336/PyQt5/QtWidgets/QHeaderView.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/nba_api/stats/endpoints/boxscoreadvancedv2.py" />
+    <entry file="file://$PROJECT_DIR$/restore.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/nba_api/stats/endpoints/boxscoresummaryv2.py" />
+    <entry file="file://$PROJECT_DIR$/player_search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/worker_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="46" lean-forward="true" selection-start-line="45" selection-end-line="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_thread.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/new_player.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2142">
-          <caret line="132" selection-start-line="132" selection-end-line="132" />
+        <state relative-caret-position="180">
+          <caret line="121" selection-start-line="121" selection-end-line="140" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/1402888915/PyQt5/QtCore/QObject.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/new_category.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-255" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/draft_table.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2040">
+          <caret line="120" selection-start-line="120" selection-end-line="120" />
           <folding>
             <element signature="e#50#59#0" expanded="true" />
           </folding>
@@ -334,25 +477,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mainwindow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
+        <state relative-caret-position="231">
+          <caret line="127" column="50" selection-start-line="127" selection-start-column="50" selection-end-line="127" selection-end-column="50" />
           <folding>
             <element signature="e#50#59#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/nba_api/stats/endpoints/boxscoreadvancedv2.py" />
-    <entry file="file://$PROJECT_DIR$/restore.py">
+    <entry file="file://$PROJECT_DIR$/worker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        <state relative-caret-position="1156">
+          <caret line="68" column="66" lean-forward="true" selection-start-line="68" selection-start-column="66" selection-end-line="68" selection-end-column="66" />
           <folding>
-            <element signature="e#43#52#0" expanded="true" />
+            <element signature="e#19#48#0" expanded="true" />
+            <marker date="1540846630462" expanded="true" signature="1340:2138" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/site-packages/nba_api/stats/endpoints/boxscoresummaryv2.py" />
   </component>
 </project>

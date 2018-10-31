@@ -38,10 +38,29 @@ class MainWindow(QWidget, object):
         # Create main layout
         hbox = QHBoxLayout()
 
+        # Create game label instances
+        self.game_list = [
+            QLabel("Game 1"),
+            QLabel("Game 2"),
+            QLabel("Game 3"),
+            QLabel("Game 4"),
+            QLabel("Game 5"),
+            QLabel("Game 6"),
+            QLabel("Game 7"),
+            QLabel("Game 8"),
+            QLabel("Game 9"),
+            QLabel("Game 10"),
+            QLabel("Game 11"),
+            QLabel("Game 12"),
+            QLabel("Game 13"),
+            QLabel("Game 14")
+        ]
+
         splitter = QSplitter(Qt.Horizontal)
 
         self.draft_table = self.create_draft_table()
         self.player_chars = self.create_player_characteristics()
+
         splitter.addWidget(self.draft_table)
         splitter.addWidget(self.player_chars)
         splitter.setStretchFactor(0, 1)
@@ -64,33 +83,15 @@ class MainWindow(QWidget, object):
         game_set_one = QHBoxLayout()
         game_set_two = QHBoxLayout()
 
-        game1 = QLabel("Game 1")
-        game2 = QLabel("Game 2")
-        game3 = QLabel("Game 3")
-        game4 = QLabel("Game 4")
-        game5 = QLabel("Game 5")
-        game6 = QLabel("Game 6")
+        label_style_sheet = ("QLabel {font-size: 14px;}")
 
-        game7 = QLabel("Game 7")
-        game8 = QLabel("Game 8")
-        game9 = QLabel("Game 9")
-        game10 = QLabel("Game 10")
-        game11 = QLabel("Game 11")
-        game12 = QLabel("Game 12")
-
-        game_set_one.addWidget(game1, alignment=Qt.AlignCenter)
-        game_set_one.addWidget(game2, alignment=Qt.AlignCenter)
-        game_set_one.addWidget(game3, alignment=Qt.AlignCenter)
-        game_set_one.addWidget(game4, alignment=Qt.AlignCenter)
-        game_set_one.addWidget(game5, alignment=Qt.AlignCenter)
-        game_set_one.addWidget(game6, alignment=Qt.AlignCenter)
-
-        game_set_two.addWidget(game7, alignment=Qt.AlignCenter)
-        game_set_two.addWidget(game8, alignment=Qt.AlignCenter)
-        game_set_two.addWidget(game9, alignment=Qt.AlignCenter)
-        game_set_two.addWidget(game10, alignment=Qt.AlignCenter)
-        game_set_two.addWidget(game11, alignment=Qt.AlignCenter)
-        game_set_two.addWidget(game12, alignment=Qt.AlignCenter)
+        for game in range(0, len(self.game_list)):
+            self.game_list[game].setStyleSheet(label_style_sheet)
+            self.game_list[game].setWordWrap(True)
+            if game < 7:
+                game_set_one.addWidget(self.game_list[game], alignment=Qt.AlignLeft)
+            else:
+                game_set_two.addWidget(self.game_list[game], alignment=Qt.AlignLeft)
 
         draft_table_layout.addWidget(self.table_widget)
         draft_table_layout.addSpacerItem(QSpacerItem(0, 20))
@@ -110,11 +111,12 @@ class MainWindow(QWidget, object):
 
         search_box = QHBoxLayout()
         name_and_number_box = QHBoxLayout()
+        team_box = QHBoxLayout()
         career_avg_box = QHBoxLayout()
         info_box = QHBoxLayout()
 
         # Search bar
-        player_search = PlayerEntry(self)
+        player_search = PlayerSearch(self)
         player_search.setPlaceholderText("Search...")
 
         divider_line = QFrame()
@@ -122,37 +124,67 @@ class MainWindow(QWidget, object):
         divider_line.setFrameShadow(QFrame.Sunken)
 
         # Right side player information
-        label_player_name = QLabel("Number and Name")
-        label_pts = QLabel("PTS")
-        label_reb = QLabel("REB")
-        label_ast = QLabel("AST")
-        label_pie = QLabel("PIE")
+        label_style_sheet = ("QLabel {font-size: 14px;}")
+        name_style_sheet = ("QLabel {font-size: 16px;}")
 
-        label_ht = QLabel("HT")
-        label_wt = QLabel("WT")
-        label_age = QLabel("Age")
-        label_born = QLabel("Born")
+        self.label_player_name = QLabel("Player number and name")
+        self.label_player_name.setWordWrap(True)
+        self.label_player_name.setAlignment(Qt.AlignCenter)
+        self.label_player_name.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        self.label_player_name.setStyleSheet(name_style_sheet)
+
+        self.label_player_team = QLabel("Team")
+        self.label_player_team.setWordWrap(True)
+        self.label_player_team.setAlignment(Qt.AlignCenter)
+        self.label_player_team.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        self.label_player_team.setStyleSheet(name_style_sheet)
+
+        self.label_pts = QLabel("PTS")
+        self.label_pts.setStyleSheet(label_style_sheet)
+
+        self.label_reb = QLabel("REB")
+        self.label_reb.setStyleSheet(label_style_sheet)
+
+        self.label_ast = QLabel("AST")
+        self.label_ast.setStyleSheet(label_style_sheet)
+
+        self.label_pie = QLabel("PIE")
+        self.label_pie.setStyleSheet(label_style_sheet)
+
+        self.label_ht = QLabel("HT")
+        self.label_ht.setStyleSheet(label_style_sheet)
+
+        self.label_wt = QLabel("WT")
+        self.label_wt.setStyleSheet(label_style_sheet)
+
+        self.label_born = QLabel("Born")
+        self.label_born.setStyleSheet(label_style_sheet)
+
 
         # Add widgets into horizontal layouts
         search_box.addWidget(player_search, alignment=Qt.AlignCenter)
 
-        name_and_number_box.addWidget(label_player_name, alignment=Qt.AlignCenter)
+        name_and_number_box.addWidget(self.label_player_name, alignment=Qt.AlignCenter)
 
-        career_avg_box.addWidget(label_pts, alignment=Qt.AlignTop)
-        career_avg_box.addWidget(label_reb, alignment=Qt.AlignTop)
-        career_avg_box.addWidget(label_ast, alignment=Qt.AlignTop)
-        career_avg_box.addWidget(label_pie, alignment=Qt.AlignTop)
+        team_box.addWidget(self.label_player_team, alignment=Qt.AlignCenter)
 
-        info_box.addWidget(label_ht, alignment=Qt.AlignTop)
-        info_box.addWidget(label_wt, alignment=Qt.AlignTop)
-        info_box.addWidget(label_age, alignment=Qt.AlignTop)
-        info_box.addWidget(label_born, alignment=Qt.AlignTop)
+        career_avg_box.addWidget(self.label_pts, alignment=Qt.AlignTop)
+        career_avg_box.addWidget(self.label_reb, alignment=Qt.AlignTop)
+        career_avg_box.addWidget(self.label_ast, alignment=Qt.AlignTop)
+        career_avg_box.addWidget(self.label_pie, alignment=Qt.AlignTop)
+
+        info_box.addWidget(self.label_ht, alignment=Qt.AlignTop)
+        info_box.addWidget(self.label_wt, alignment=Qt.AlignTop)
+        info_box.addWidget(self.label_born, alignment=Qt.AlignTop)
 
         # Add horizontal layouts into grid layout
         grid_layout.addItem(search_box)
         grid_layout.addWidget(divider_line)
 
         grid_layout.addItem(name_and_number_box)
+        grid_layout.addItem(QSpacerItem(0, 50))
+
+        grid_layout.addItem(team_box)
         grid_layout.addItem(QSpacerItem(0, 100))
 
         grid_layout.addItem(career_avg_box)
@@ -162,19 +194,60 @@ class MainWindow(QWidget, object):
         group_box.setLayout(grid_layout)
 
         # Signals
-        player_search.textChanged.connect(self.refresh_data_cb)
+        player_search.editingFinished.connect(self.refresh_data_cb)
 
         return group_box
 
     # CALLBACKS----------
     def refresh_data_cb(self):
         """Handle updating the player information section."""
-        sender = self.sender()
 
-        for sublist in self.players:
-            if sublist[3] == sender.text():
-                player_info = commonplayerinfo.CommonPlayerInfo(player_id=sublist[0])
-                print(player_info)
+        player_id = None
+        text = self.sender().text()
+
+        if text in self.parent.all_players.abv_player_list:
+            element = self.parent.all_players.abv_player_list.index(text)
+            player_id = self.parent.all_players.player_id[element]
+
+        player_info = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
+
+        self.blockSignals(True)
+        self.label_player_name.setText("# " + player_info.common_player_info.data['data'][0][13] +
+                                       "\n" + player_info.common_player_info.data['data'][0][3])
+        self.label_player_team.setText(player_info.common_player_info.data['data'][0][20] + " " +
+                                       player_info.common_player_info.data['data'][0][17] + "\n"+
+                                       player_info.data_sets[1].data['data'][0][2])
+        self.label_pts.setText("PTS \n" + str(player_info.data_sets[1].data['data'][0][3]))
+        self.label_reb.setText("REB \n" + str(player_info.data_sets[1].data['data'][0][5]))
+        self.label_ast.setText("AST \n" + str(player_info.data_sets[1].data['data'][0][4]))
+        self.label_pie.setText("PIE \n" + str(player_info.data_sets[1].data['data'][0][6]))
+
+        self.label_ht.setText("HT \n" + str(player_info.common_player_info.data['data'][0][10]))
+        self.label_wt.setText("WT \n" + str(player_info.common_player_info.data['data'][0][11]))
+        self.label_born.setText("Born \n" +  str(player_info.common_player_info.data['data'][0][6][0:10]))
+        self.blockSignals(False)
+
+
+class PlayerSearch(QLineEdit, object):
+
+    """Line edit to support auto-complete and other various methods needed for players."""
+
+    def __init__(self, parent):
+        super(PlayerSearch, self).__init__(parent)
+        self.parent = parent
+
+        list = []
+        self.completer = QCompleter()
+        self.setCompleter(self.completer)
+
+        try:
+            list = self.parent.parent.all_players.abv_player_list
+        except AttributeError:
+            pass
+
+        my_completer = QCompleter(list)
+        my_completer.setCaseSensitivity(1)
+        self.setCompleter(my_completer)
 
 
 class Tracker(QMainWindow, object):
