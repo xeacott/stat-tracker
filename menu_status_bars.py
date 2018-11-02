@@ -59,14 +59,14 @@ class StatusBar(object):
     """Defines and controls all statusbar actions."""
 
     def __init__(self, parent):
-        statusbar = parent.statusBar()
+        self.statusbar = parent.statusBar()
         self.parent = parent     # parent is CipExplorer
-        statusbar.setSizeGripEnabled(True)
+        self.statusbar.setSizeGripEnabled(True)
         font = QFont()
         font.setFamily("")
         font.setPointSize(8)
         font.setBold(True)
         font.setWeight(55)
-        statusbar.setFont(font)
-        statusbar.setStyleSheet("background-color:rgb(192, 192, 192)")
-        parent.setStatusBar(statusbar)
+        self.statusbar.setFont(font)
+        self.statusbar.setStyleSheet("background-color:rgb(192, 192, 192)")
+        parent.setStatusBar(self.statusbar)

@@ -10,7 +10,7 @@ from nba_api.stats.library import data
 
 from nba_api.stats.endpoints import scoreboardv2
 
-TIMER = 30000
+TIMER = 3000
 
 class RefreshGames(QObject, object):
 
@@ -46,19 +46,20 @@ class RefreshGames(QObject, object):
         # Start the thread
         self.thread.start()
 
-    def init_game_info(self, data):
+    def init_game_info(self, boxscore):
         """Initialize all labels to show game information."""
 
         self.times = []
         self.game_info_list = []
         self.game_score_list = []
-        self.total_games = len(data[1])
+
+        self.total_games = len(boxscore)
 
         for start_time in range(0, self.total_games):
-            self.times.append(data[1][start_time][4])
+            self.times.append(boxscore[start_time][4])
 
         for teams in range(0, self.total_games):
-            self.game_info_list.append(data[1][teams][5][-6:])
+            self.game_info_list.append(boxscore[teams][5][-6:])
 
         for index in range(0, self.total_games):
             team_info = (self.game_info_list)[index]
@@ -67,6 +68,13 @@ class RefreshGames(QObject, object):
 
             game = team_1 + "  |  " + team_2 + ' \n' + self.times[index]
             self.parent.main_window.game_list[index].setText(game)
+            self.parent.main_window.statusbar.statusbar.showMessage(
+                "Games initialized", 3000
+            )
+
+    def update_scoreboard_info(self, scoreboard):
+        print("Update games here")
+
 
 
     def refresh_game_data_cb(self, data):
@@ -76,17 +84,22 @@ class RefreshGames(QObject, object):
             string that contains game data such as score, quarter, time remaining
 
         """
+
+        scoreboard = data[0]
+        boxscore = data[1]
+
+        del data
+
+        # Initialize all games
+        # TODO : move this out of here with a singleShot QTimer
         if not self.games_initilzed:
-            self.init_game_info(data)
+            self.init_game_info(boxscore)
             self.games_initilzed = True
 
-        # Check if games have started
-        if self.games_started:
-            # Remove the start time, replace with quarter and time remaining
-            print("OK")
-
-
-
+        # Check if the earliest game has started
+        if (boxscore[0][9] == "1") | (boxscore[0][9] != "0"):
+            # TODO : Remove the start time, replace with quarter and time remaining
+            self.update_scoreboard_info(scoreboard)
 
 
 class Worker(QObject):
@@ -103,9 +116,11 @@ class Worker(QObject):
         changed, do not send signal to update.
         """
         game_info = []
+        current_scoreboard_info = None
 
         exceptions = (ConnectionError, ConnectionRefusedError, TimeoutError)
         date = str(datetime.now().date())
+        date = "2018-10-30"
         id = '00'
         try:
             current_scoreboard_info = scoreboardv2.ScoreboardV2(
@@ -115,9 +130,9 @@ class Worker(QObject):
             )
 
         except exceptions:
-            pass
+            print("Request failed.")
 
-        finally:
-            game_info.append(current_scoreboard_info.line_score.data['data'])
-            game_info.append(current_scoreboard_info.data_sets[0].data['data'])
-            self.list_signal.emit(game_info)
+
+        game_info.append(current_scoreboard_info.line_score.data['data'])
+        game_info.append(current_scoreboard_info.data_sets[0].data['data'])
+        self.list_signal.emit(game_info)
