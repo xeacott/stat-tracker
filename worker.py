@@ -3,6 +3,7 @@ from datetime import datetime
 
 # Third Party Packages
 import os
+import requests
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -26,19 +27,19 @@ class RefreshGames(QObject, object):
         # Create thread and worker object
         self.parent = parent
         self.thread = QThread()
-        self.worker = Worker()
+        self.game_info_worker = GameInfoWorker()
 
         # Create timer to allow for 30 second refresh
         self.timer = QTimer()
         self.timer.setInterval(TIMER)
 
         # Set direct connection thread-safe signal
-        self.timer.timeout.connect(self.worker.update_live_games)
-        self.worker.list_signal.connect(self.refresh_game_data_cb)
+        self.timer.timeout.connect(self.game_info_worker.update_live_games)
+        self.game_info_worker.list_signal.connect(self.refresh_game_data_cb)
 
         # Move the worker to the thread
         self.timer.moveToThread(self.thread)
-        self.worker.moveToThread(self.thread)
+        self.game_info_worker.moveToThread(self.thread)
 
         # Connect on-start signal
         self.thread.started.connect(self.timer.start)
@@ -76,7 +77,6 @@ class RefreshGames(QObject, object):
         print("Update games here")
 
 
-
     def refresh_game_data_cb(self, data):
         """Update the game scores on the main window.
 
@@ -102,7 +102,7 @@ class RefreshGames(QObject, object):
             self.update_scoreboard_info(scoreboard)
 
 
-class Worker(QObject):
+class GameInfoWorker(QObject):
 
     """Worker to collect live data."""
 
@@ -116,11 +116,9 @@ class Worker(QObject):
         changed, do not send signal to update.
         """
         game_info = []
-        current_scoreboard_info = None
 
-        exceptions = (ConnectionError, ConnectionRefusedError, TimeoutError)
+        # exceptions = (ConnectionError, ConnectionRefusedError, TimeoutError, )
         date = str(datetime.now().date())
-        date = "2018-10-30"
         id = '00'
         try:
             current_scoreboard_info = scoreboardv2.ScoreboardV2(
@@ -129,10 +127,14 @@ class Worker(QObject):
                 league_id=id
             )
 
-        except exceptions:
+        except requests.exceptions.ConnectionError:
             print("Request failed.")
 
+        else:
+            game_info.append(current_scoreboard_info.line_score.data['data'])
+            game_info.append(current_scoreboard_info.data_sets[0].data['data'])
+            self.list_signal.emit(game_info)
 
-        game_info.append(current_scoreboard_info.line_score.data['data'])
-        game_info.append(current_scoreboard_info.data_sets[0].data['data'])
-        self.list_signal.emit(game_info)
+
+class PlayerInfoWorker(QObject):
+    pass

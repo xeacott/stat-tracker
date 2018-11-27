@@ -1,6 +1,5 @@
 # Standard Library
 import argparse
-import sys
 from importlib import import_module
 
 # Third Party Packages
@@ -22,6 +21,7 @@ sys.excepthook = excepthook
 
 def main():
     """Drive application upon startup and setup environment."""
+    current_exit_code = 0
     # Launch NBA Stat Tracker main window
     app = QApplication(sys.argv)
     mw = MAIN_WINDOW.Tracker()
@@ -33,8 +33,10 @@ def main():
         mw.on_start()
     QTimer.singleShot(0, on_start_cb)
 
-    app.exec_()
+    current_exit_code = app.exec_()
     app.deleteLater()
+    if current_exit_code == mw.EXIT_CODE_RESTART:
+        main()
 
 
 if __name__ == "__main__":
@@ -44,3 +46,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     main()
+

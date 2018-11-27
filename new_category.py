@@ -67,7 +67,8 @@ class CategoryDialog(QDialog, object):
 
         # Label displaying information
         self.label = QLabel("Select which category to draw statistics for.")
-        self.label.setStyleSheet("QLabel {font-size: 14px;}")
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setStyleSheet("QLabel {font-size: 16px;}")
 
         # Custom tab as main view
         self.category = QComboBox()
@@ -84,7 +85,7 @@ class CategoryDialog(QDialog, object):
         layout.addWidget(self.category, alignment=Qt.AlignCenter)
         layout.addWidget(self.buttons)
 
-        self.setMinimumSize(350, 250)
+        self.setMinimumSize(350, 300)
         self.setWindowTitle("Set Category")
 
     @staticmethod

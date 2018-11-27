@@ -10,6 +10,9 @@ from PyQt5.QtWidgets import *
 from nba_api.stats.endpoints import playerfantasyprofile
 from nba_api.stats.library import data
 
+# Relative Imports
+from player_search import PlayerEntry
+
 
 """
     new_category file to hold model and data for dialog to enter new category information.
@@ -67,13 +70,14 @@ class PlayerDialog(QDialog, object):
 
         # Label displaying information
         self.label = QLabel(
-            "Type in an NBA player to draw statistics from. "
+            "Type in an NBA player to draw statistics from. \n"
             "This field supports auto-complete.")
-        self.label.setStyleSheet("QLabel {font-size: 14px;}")
+        self.label.setStyleSheet("QLabel {font-size: 16px;}")
+        self.label.setAlignment(Qt.AlignCenter)
 
         # Custom tab as main view
         self.player = PlayerEntry(parent)
-        self.player.setPlaceholderText("Search...")
+        self.player.setPlaceholderText("Search by last name...")
 
         # OK and Cancel buttons
         self.buttons = QDialogButtonBox(
@@ -86,18 +90,8 @@ class PlayerDialog(QDialog, object):
         layout.addWidget(self.player, alignment=Qt.AlignCenter)
         layout.addWidget(self.buttons)
 
-        self.setMinimumSize(350, 250)
+        self.setMinimumSize(350, 300)
         self.setWindowTitle("Set Player")
-
-    #CALLBACKS-------------------
-    def test_text_cb(self):
-        approved = True
-        if not self.player.text() in self.parent.all_players.abv_player_list:
-            QMessageBox.about(self,
-                              'Notice!',
-                              'Player not loaded, please try again.')
-            approved = False
-        return approved
 
     @staticmethod
     def get_settings(parent):
@@ -112,30 +106,8 @@ class PlayerDialog(QDialog, object):
         result = dialog.exec_()
         accepted = False
         if result == QDialog.Accepted:
-            approved = dialog.test_text_cb()
+            approved = PlayerEntry.test_text_cb(parent, dialog.player.text())
             if approved:
                 parent.player_cache.player = dialog.player.text()
                 accepted = True
         return accepted
-
-
-class PlayerEntry(QLineEdit, object):
-
-    """Line edit to support auto-complete and other various methods needed for players."""
-
-    def __init__(self, parent):
-        super(PlayerEntry, self).__init__(parent)
-        self.parent = parent
-
-        list = []
-        self.completer = QCompleter()
-        self.setCompleter(self.completer)
-
-        try:
-            list = self.parent.all_players.abv_player_list
-        except AttributeError:
-            pass
-
-        my_completer = QCompleter(list)
-        my_completer.setCaseSensitivity(1)
-        self.setCompleter(my_completer)
